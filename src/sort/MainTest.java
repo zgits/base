@@ -26,7 +26,11 @@ public class MainTest {
 
 //        shellSort(arrs);//调用希尔排序
 
-        mergeSort(arrs,0,arrs.length-1);//调用归并排序
+//        mergeSort(arrs, 0, arrs.length - 1);//调用归并排序
+
+//        quickSort(arrs, 0, arrs.length - 1);//调用快速排序
+
+        countSort(arrs);//调用计数排序
 
         long endTime = System.currentTimeMillis(); //获取结束时间
 
@@ -125,71 +129,143 @@ public class MainTest {
 
     /**
      * 归并排序
+     *
      * @param arrs 待排序数组
-     * @param L 指向数组的第一个元素
-     * @param R 指向数组的最后一个元素
+     * @param L    指向数组的第一个元素
+     * @param R    指向数组的最后一个元素
      */
-    private static void mergeSort(int[] arrs,int L,int R){
+    private static void mergeSort(int[] arrs, int L, int R) {
 
-        if(L==R){
+        if (L == R) {
             return;
-        }else{
+        } else {
             // 取中间的数进行拆分
-            int M=(L+R)/2;
-            mergeSort(arrs,L,M);
-            mergeSort(arrs,M+1,R);
-            merge(arrs,L,M+1,R);
+            int M = (L + R) / 2;
+            mergeSort(arrs, L, M);
+            mergeSort(arrs, M + 1, R);
+            merge(arrs, L, M + 1, R);
         }
 
     }
 
     /**
-     * 合并数组
+     * 合并数组 合并归并排序
+     *
      * @param arrs
-     * @param L 指向数组的第一个元素
-     * @param M 指向数组分隔的元素
-     * @param R 指向数组最后的元素
+     * @param L    指向数组的第一个元素
+     * @param M    指向数组分隔的元素
+     * @param R    指向数组最后的元素
      */
-    private static void merge(int[] arrs,int L,int M,int R){
-        int[] leftArray=new int[M-L];//左边数组的大小
-        int[] rightArray=new int[R-M+1];//右边数组的大小
+    private static void merge(int[] arrs, int L, int M, int R) {
+        int[] leftArray = new int[M - L];//左边数组的大小
+        int[] rightArray = new int[R - M + 1];//右边数组的大小
 
         //往两个数组填充数据
-        for (int i=L;i<M;i++){
-            leftArray[i-L]=arrs[i];
+        for (int i = L; i < M; i++) {
+            leftArray[i - L] = arrs[i];
         }
-        for (int i=M;i<=R;i++){
-            rightArray[i-M]=arrs[i];
+        for (int i = M; i <= R; i++) {
+            rightArray[i - M] = arrs[i];
         }
 
-        int i=0,j=0;
-        int k=L;
+        int i = 0, j = 0;
+        int k = L;
 
-        while (i<leftArray.length&&j<rightArray.length){
-            if(leftArray[i]<rightArray[j]){
-                arrs[k]=leftArray[i];
+        while (i < leftArray.length && j < rightArray.length) {
+            if (leftArray[i] < rightArray[j]) {
+                arrs[k] = leftArray[i];
                 i++;
                 k++;
-            }else{
-                arrs[k]=rightArray[j];
+            } else {
+                arrs[k] = rightArray[j];
                 j++;
                 k++;
             }
         }
         for (; i < leftArray.length; i++) {
-            arrs[k]=leftArray[i];
+            arrs[k] = leftArray[i];
             k++;
         }
         for (; j < rightArray.length; j++) {
-            arrs[k]=rightArray[j];
+            arrs[k] = rightArray[j];
             k++;
         }
 
     }
 
 
+    /**
+     * 快速排序
+     *
+     * @param arrs
+     */
+    private static void quickSort(int[] arrs, int l, int r) {
+
+        if (l < r) {
+            int i = l;
+            int j = r;
+            int temp = arrs[l];
+            while (i < j) {
+                while (i < j && arrs[j] >= temp) {
+                    j--;
+                }
+                if (i < j) {
+                    arrs[i] = arrs[j];
+                }
+                while (i < j && arrs[i] < temp) {
+                    i++;
+                }
+                if (i < j) {
+                    arrs[j] = arrs[i];
+                }
+            }
+            arrs[i] = temp;
+            quickSort(arrs, l, i - 1);
+            quickSort(arrs, i + 1, r);
+
+        }
 
 
+    }
+
+
+    /**
+     * 计数排序
+     *
+     * @param arrs
+     */
+    private static void countSort(int[] arrs) {
+        int bias;
+        int min = arrs[0];
+        int max = arrs[0];
+        for (int i = 1; i < arrs.length; i++) {
+            if (arrs[i] > max) {
+                max = arrs[i];
+            }
+            if (arrs[i] < min) {
+                min = arrs[i];
+            }
+        }
+        bias = 0 - min;
+        int[] buckt = new int[max - min + 1];
+        Arrays.fill(buckt, 0);
+        for (int i = 0; i < arrs.length; i++) {
+            buckt[arrs[i] + bias]++;
+        }
+        int index = 0;
+        int i = 0;
+        while (index<arrs.length){
+            if(buckt[i]!=0){
+                arrs[index]=i-bias;
+                buckt[i]--;
+                index++;
+            }else{
+                i++;
+            }
+        }
+
+
+    }
 
 
 }
